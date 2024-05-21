@@ -9,7 +9,159 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id Int @id @default(autoincrement())
+  username String @unique
+  password String 
+  email String @unique
+  firstName String
+  lastName String
+  dateOfBirth DateTime
+  role Role
+  bookings Booking[]
+  staff Staff?
+
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+model Airport {
+  id Int @id @default(autoincrement())
+  name String 
+  city String
+  country String
+  iataCode String @unique
+  icaoCode String @unique
+  departures Flight[] @relation("departures")
+  arrivals Flight[] @relation("arrivals")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Aircraft {
+  id Int @id @default(autoincrement())
+  model String
+  manufacturer String
+  seatingCapacity Int
+  flights Flight[]
+
+  createdAt DateTime @default(now())
+  updated DateTime @updatedAt
+}
+
+model Flight {
+  id Int @id @default(autoincrement())
+  flightNumber String @unique
+  departureAirportId Int
+  arrivalAirportId Int
+  departureTime DateTime
+  arrivalTime DateTime
+  aircraftId Int
+  status FlightStatus
+  bookings Booking[]
+  flightCrew FlightCrew[]
+
+  departureAirport Airport @relation("departures", fields: [departureAirportId], references: [id])
+  arrivalAirport Airport @relation("arrivals", fields: [arrivalAirportId], references: [id])
+  aircraft Aircraft @relation(fields: [aircraftId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Booking {
+  id Int @id @default(autoincrement())
+  userId Int
+  flightId Int
+  bookingDate DateTime
+  status BookingStatus
+  seatNumber String
+  payment Payment?
+
+  user User @relation(fields: [userId], references: [id])
+  flight Flight @relation(fields: [flightId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+  bookingId Int @unique
+  amount Float
+  paymentDate DateTime
+  paymentMethod PaymentMethod
+  status PaymentStatus  
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Staff {
+  id Int @id @default(autoincrement())
+  userId Int @unique
+  position String 
+  department String
+  flightCrew FlightCrew[]
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FlightCrew {
+  id Int @id @default(autoincrement())
+  flightId Int
+  staffId Int
+  role CrewRole
+
+  flight Flight @relation(fields: [flightId], references: [id])
+  staff Staff @relation(fields: [staffId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER 
+  STAFF
+}
+
+enum FlightStatus {
+  SCHEDULED 
+  ON_TIME
+  DELAYED
+  CANCELLED
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+  PENDING
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+}
+
+enum PaymentStatus {
+  COMPLETED
+  FAILED
+  PENDING
+}
+
+enum CrewRole {
+  PILOT
+  CO_PILOT
+  ATTENDANT
+}
