@@ -54,3 +54,5 @@ const getAircraft = async (req, res) => {
     });
   }
 };
+
+module.exports = { getAirCraftById, getAircraft, getAllAirCrafts };

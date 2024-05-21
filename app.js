@@ -4,13 +4,13 @@ const app = express();
 const port = process.env.PORT || 9000;
 
 // Init routing
-// const movieRoutes = require("./src/routes/movieRoutes");
+const aircraftRoute = require("./src/routes/aircraftRoute");
 // const genreRoutes = require("./src/routes/genreRoutes");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(movieRoutes);
-// app.use(genreRoutes);
+app.use(aircraftRoute);
 
 // Index endpoint
 app.get("/", (req, res) => {

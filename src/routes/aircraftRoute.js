@@ -3,3 +3,5 @@ const router = express.Router();
 const aircraftController = require("../controllers/aircraftController");
 
 router.get("/aircraft", aircraftController.getAircraft);
+
+module.exports = router;
