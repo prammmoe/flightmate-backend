@@ -1,15 +1,16 @@
 const express = require("express");
+const logger = require("morgan");
 
 const app = express();
 const port = process.env.PORT || 9000;
 
 // Init routing
 const aircraftRoute = require("./src/routes/aircraftRoute");
-// const genreRoutes = require("./src/routes/genreRoutes");
+
+app.use(logger("dev"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// app.use(movieRoutes);
 app.use(aircraftRoute);
 
 // Index endpoint
