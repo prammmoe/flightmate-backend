@@ -1,5 +1,9 @@
 const prisma = require("../configs/prismaConfig");
 
+/***
+ * @function getAirCraftById
+ * Function to get unique aircraft by {id}
+ */
 const getAirCraftById = async (prisma, aircraftId) => {
   try {
     const aircraft = await prisma.aircraft.findUnique({
@@ -17,6 +21,11 @@ const getAirCraftById = async (prisma, aircraftId) => {
   }
 };
 
+/***
+ * @function getAllAirCrafts
+ * Function to get all aircrafts available in the database.
+ */
+
 const getAllAirCrafts = async (prisma) => {
   try {
     const aircraft = await prisma.aircraft.findMany({
@@ -30,6 +39,11 @@ const getAllAirCrafts = async (prisma) => {
     throw error;
   }
 };
+
+/***
+ * @function getAircraft
+ * Parent function of getAircraftById & getAllAirCrafts for handle bulk and single request of the aircraft data.
+ */
 
 const getAircraft = async (req, res) => {
   const aircraftId = parseInt(req.params.id);
@@ -55,10 +69,26 @@ const getAircraft = async (req, res) => {
   }
 };
 
+/***
+ * @function addAircraft
+ * Function to add new aircraft data, both single and bulk addition
+ */
+
 const addAircraft = async (req, res) => {
   const newAircraftData = req.body;
 
+  // Validate input
+  // Validasi tolol ngebug
+  // if (
+  //   !newAircraftData.model ||
+  //   !newAircraftData.manufacturer ||
+  //   typeof newAircraftData.seatingCapacity !== "number"
+  // ) {
+  //   return res.status(400).send({ error: "Invalid input" });
+  // }
+
   try {
+    // Bulk addition
     if (Array.isArray(newAircraftData)) {
       const createdAircraft = await prisma.aircraft.createMany({
         data: newAircraftData,
@@ -68,6 +98,7 @@ const addAircraft = async (req, res) => {
         message: "Success create new aircraft data.",
       });
     } else {
+      // Single addition
       const result = await prisma.aircraft.create({
         data: {
           model: newAircraftData.model,
@@ -82,9 +113,115 @@ const addAircraft = async (req, res) => {
     res.status(500).send({
       message: "An error occurred while adding the aircraft",
     });
-  } finally {
-    prisma.$disconnect;
   }
 };
 
-module.exports = { getAirCraftById, getAircraft, getAllAirCrafts, addAircraft };
+/**
+ * @function deleteAircraft
+ * Function to delete aircraft, only by using id
+ */
+
+const deleteAircraft = async (req, res) => {
+  const aircraftId = parseInt(req.params.id);
+
+  try {
+    await prisma.aircraft.delete({
+      where: {
+        id: aircraftId,
+      },
+    });
+
+    res.status(200).send({
+      message: "Aircraft deleted",
+    });
+  } catch (error) {
+    console.error("Error deleting aircraft: ", error);
+    if (error.code === "P2025") {
+      return res.status(404).send({ error: "Aircraft not found" });
+    }
+    res.status(500).send({
+      error: "An error occurred when deleting the aircraft",
+    });
+  }
+};
+
+/**
+ * @function updateAircraft
+ * Function to update an existing aircraft by its id.
+ */
+
+const updateAircraft = async (req, res) => {
+  const aircraftId = parseInt(req.params.id);
+  const updateData = req.body;
+
+  try {
+    const updatedAircraft = await prisma.aircraft.update({
+      where: {
+        id: aircraftId,
+      },
+      data: updateData,
+    });
+
+    res.status(200).send(updatedAircraft);
+  } catch (error) {
+    console.error("Error updating aircraft: ", error);
+    if (error.code === "P2025") {
+      return res.status(404).send({ error: "Aircraft not found" });
+    }
+    res.status(500).send({
+      error: "An error occurred when updating the aircraft",
+    });
+  }
+};
+
+/**
+ * @function updateAircraftFull
+ * Function to update an existing resource entirely.
+ */
+
+const updateAircraftFull = async (req, res) => {
+  const aircraftId = parseInt(req.params.id);
+  const { model, manufacturer, seatingCapacity } = req.body;
+
+  if (!model || !manufacturer || typeof seatingCapacity !== "number") {
+    return res.status(400).send({
+      error: "Invalid input",
+    });
+  }
+
+  try {
+    const updatedAircraft = await prisma.aircraft.update({
+      where: {
+        id: aircraftId,
+      },
+      data: {
+        model,
+        manufacturer,
+        seatingCapacity
+      },
+    });
+    res.status(200).send(updatedAircraft);
+  } catch (error) {
+    console.error("Error updating aircraft: ", error);
+    if (error.code === "P2025") {
+      return res.status(404).send({ error: "Aircraft not found" });
+    }
+    res.status(500).send({
+      error: "An error occurred when updating the aircraft",
+    });
+  }
+};
+
+/**
+ * @module
+ * exports all the function
+ */
+module.exports = {
+  getAirCraftById,
+  getAircraft,
+  getAllAirCrafts,
+  addAircraft,
+  deleteAircraft,
+  updateAircraft,
+  updateAircraftFull,
+};
