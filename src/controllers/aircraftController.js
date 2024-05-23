@@ -55,4 +55,36 @@ const getAircraft = async (req, res) => {
   }
 };
 
-module.exports = { getAirCraftById, getAircraft, getAllAirCrafts };
+const addAircraft = async (req, res) => {
+  const newAircraftData = req.body;
+
+  try {
+    if (Array.isArray(newAircraftData)) {
+      const createdAircraft = await prisma.aircraft.createMany({
+        data: newAircraftData,
+      });
+      res.status(200).send({
+        data: createdAircraft,
+        message: "Success create new aircraft data.",
+      });
+    } else {
+      const result = await prisma.aircraft.create({
+        data: {
+          model: newAircraftData.model,
+          manufacturer: newAircraftData.manufacturer,
+          seatingCapacity: newAircraftData.seatingCapacity,
+        },
+      });
+      res.status(201).send(result);
+    }
+  } catch (error) {
+    console.log("Error adding aircraft: ", error);
+    res.status(500).send({
+      message: "An error occurred while adding the aircraft",
+    });
+  } finally {
+    prisma.$disconnect;
+  }
+};
+
+module.exports = { getAirCraftById, getAircraft, getAllAirCrafts, addAircraft };
