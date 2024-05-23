@@ -126,15 +126,15 @@ const addAirport = async (req, res) => {
   const newAirportData = req.body;
 
   // Validate input
-  // if (
-  //   !newAirportData.name ||
-  //   !newAirportData.city ||
-  //   !newAirportData.country ||
-  //   typeof newAirportData.iataCode !== "string" ||
-  //   typeof newAirportData.icaoCode !== "string"
-  // ) {
-  //   return res.status(400).send({ error: "Invalid input" });
-  // }
+  if (
+    !newAirportData.name ||
+    !newAirportData.city ||
+    !newAirportData.country ||
+    typeof newAirportData.iataCode !== "string" ||
+    typeof newAirportData.icaoCode !== "string"
+  ) {
+    return res.status(400).send({ error: "Invalid input" });
+  }
   try {
     // Handle bulk addition
     if (Array.isArray(newAirportData)) {
