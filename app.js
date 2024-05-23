@@ -6,12 +6,14 @@ const port = process.env.PORT || 9000;
 
 // Init routing
 const aircraftRoute = require("./src/routes/aircraftRoute");
+const airportRoute = require("./src/routes/airportRoute");
 
 app.use(logger("dev"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(aircraftRoute);
+app.use(airportRoute);
 
 // Index endpoint
 app.get("/", (req, res) => {

@@ -21,6 +21,45 @@ const getAirCraftById = async (prisma, aircraftId) => {
   }
 };
 
+/**
+ * @function getAircraftByParams
+ * Function to get aircrafts available based on specific params
+ */
+
+const getAircraftByParams = async (prisma, query) => {
+  const { model, manufacturer, seatingCapacity } = query;
+
+  // Validate the query parameters
+  if (!model && !manufacturer && !seatingCapacity) {
+    throw new Error("At least one search parameter must be provided");
+  }
+
+  const filter = {};
+  if (model) filter.model = model;
+  if (manufacturer) filter.manufacturer = manufacturer;
+  if (seatingCapacity) {
+    const capacity = parseInt(seatingCapacity);
+    if (isNaN(capacity)) {
+      throw new Error("Seating capacity must be a valid number");
+    }
+    filter.seatingCapacity = seatingCapacity;
+  }
+
+  try {
+    const aircraft = await prisma.aircraft.findMany({
+      where: filter,
+      include: {
+        flights: true,
+      },
+    });
+
+    return aircraft;
+  } catch (error) {
+    console.error("Error retrieving aircrafts: ", error);
+    throw error;
+  }
+};
+
 /***
  * @function getAllAirCrafts
  * Function to get all aircrafts available in the database.
@@ -42,11 +81,12 @@ const getAllAirCrafts = async (prisma) => {
 
 /***
  * @function getAircraft
- * Parent function of getAircraftById & getAllAirCrafts for handle bulk and single request of the aircraft data.
+ * Parent function of getAircraftById, getAircraftByParams & getAllAirCrafts for handle bulk and single request of the aircraft data.
  */
 
 const getAircraft = async (req, res) => {
   const aircraftId = parseInt(req.params.id);
+  const query = req.query;
   try {
     if (aircraftId) {
       const aircraft = await getAirCraftById(prisma, aircraftId);
@@ -55,6 +95,15 @@ const getAircraft = async (req, res) => {
       } else {
         res.status(404).send({
           message: "Aircraft not found",
+        });
+      }
+    } else if (Object.keys(query).length > 0) {
+      try {
+        const aircrafts = await getAircraftByParams(prisma, query);
+        res.status(200).send(aircrafts);
+      } catch (error) {
+        res.status(400).send({
+          message: error.message,
         });
       }
     } else {
@@ -217,6 +266,7 @@ const updateAircraftFull = async (req, res) => {
  */
 module.exports = {
   getAirCraftById,
+  getAircraftByParams,
   getAircraft,
   getAllAirCrafts,
   addAircraft,
