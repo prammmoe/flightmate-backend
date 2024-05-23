@@ -1,4 +1,3 @@
-const { query } = require("express");
 const prisma = require("../configs/prismaConfig");
 
 /***
