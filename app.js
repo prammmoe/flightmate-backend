@@ -8,6 +8,7 @@ const port = process.env.PORT || 9000;
 const aircraftRoute = require("./src/routes/aircraftRoute");
 const airportRoute = require("./src/routes/airportRoute");
 const flightRoute = require("./src/routes/flightRoute");
+const bookingRoute = require("./src/routes/bookingRoute");
 
 app.use(logger("dev"));
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(aircraftRoute);
 app.use(airportRoute);
 app.use(flightRoute);
+app.use(bookingRoute);
 
 // Index endpoint
 app.get("/", (req, res) => {
