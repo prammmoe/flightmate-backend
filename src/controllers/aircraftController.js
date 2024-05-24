@@ -127,13 +127,13 @@ const addAircraft = async (req, res) => {
   const newAircraftData = req.body;
 
   // Validate input
-  if (
-    !newAircraftData.model ||
-    !newAircraftData.manufacturer ||
-    typeof newAircraftData.seatingCapacity !== "number"
-  ) {
-    return res.status(400).send({ error: "Invalid input" });
-  }
+  // if (
+  //   !newAircraftData.model ||
+  //   !newAircraftData.manufacturer ||
+  //   typeof newAircraftData.seatingCapacity !== "number"
+  // ) {
+  //   return res.status(400).send({ error: "Invalid input" });
+  // }
 
   try {
     // Bulk addition
