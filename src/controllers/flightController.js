@@ -244,6 +244,57 @@ const deleteFlight = async (req, res) => {
 };
 
 /**
+ * @function searchFlights
+ * Function to search for flights based on query parameters
+ */
+
+const searchFlights = async (req, res) => {
+  const { departureCity, arrivalCity, travelDate } = req.query;
+
+  if (!departureCity || !arrivalCity || !travelDate) {
+    return res.status(400).send({
+      error: "please input needed data",
+    });
+  }
+
+  try {
+    const flights = await prisma.flight.findMany({
+      where: {
+        departureTime: {
+          // Filters for flights departing from the day from 00:00:00 to 23:59:59 (UTC time).
+          gte: new Date(`${travelDate}T00:00:00Z`),
+          lt: new Date(`${travelDate}T23:59:59Z`),
+        },
+        departureAirport: {
+          city: departureCity,
+        },
+        arrivalAirport: {
+          city: arrivalCity,
+        },
+      },
+      include: {
+        aircraft: true,
+        departureAirport: true,
+        arrivalAirport: true,
+      },
+    });
+
+    if (flights.length === 0) {
+      return res.status(400).send({
+        message: "No flights found",
+      });
+    }
+
+    res.status(200).send(flights);
+  } catch (error) {
+    console.error("Error searching for flights: ", error);
+    res.status(500).send({
+      message: "An error occurred while searching for flights",
+    });
+  }
+};
+
+/**
  * @module
  * Exports all the function
  */
@@ -256,4 +307,5 @@ module.exports = {
   deleteFlight,
   updateFlight,
   updateFlightFull,
+  searchFlights,
 };
