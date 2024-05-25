@@ -3,6 +3,20 @@ const logger = require("morgan");
 
 const app = express();
 const port = process.env.PORT || 9000;
+const cors = require("cors");
+
+/**
+ * @package Cors
+ */
+
+const corsBaseUrl = "http://localhost:3000";
+
+app.use(
+  cors({
+    origin: corsBaseUrl,
+    optionsSuccessStatus: 200,
+  })
+);
 
 /**
  * @module Swagger
@@ -29,7 +43,7 @@ app.use(bookingRoute);
 
 // Index endpoint
 app.get("/", (req, res) => {
-  res.send("Welcome!");
+  res.send("Pace bekasi daboy!");
 });
 
 app.listen(port, () => {
