@@ -15,18 +15,26 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  username String @unique
+  name String
   password String 
   email String @unique
-  firstName String
-  lastName String
-  dateOfBirth DateTime
   role Role
   bookings Booking[]
   staff Staff?
 
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
+}
+
+model Passenger {
+  id Int @id @default(autoincrement())
+  firstName String
+  lastName String
+  dateOfBirth DateTime
+  bookings Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Airport {
@@ -77,6 +85,7 @@ model Flight {
 model Booking {
   id Int @id @default(autoincrement())
   userId Int
+  passengerId Int
   flightId Int
   bookingDate DateTime
   status BookingStatus
@@ -84,6 +93,7 @@ model Booking {
   payment Payment?
 
   user User @relation(fields: [userId], references: [id])
+  passenger Passenger @relation(fields: [passengerId], references: [id])
   flight Flight @relation(fields: [flightId], references: [id])
 
   createdAt DateTime @default(now())
