@@ -28,6 +28,7 @@ const addFlight = async (req, res) => {
       const result = await prisma.flight.create({
         data: {
           flightNumber: newFlightData.flightNumber,
+          flightClass: newFlightData.flightClass,
           departureAirportId: newFlightData.departureAirportId,
           arrivalAirportId: newFlightData.arrivalAirportId,
           departureTime: new Date(newFlightData.departureTime),
