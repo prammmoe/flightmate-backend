@@ -6,12 +6,38 @@ const prisma = require("../configs/prismaConfig");
  */
 
 const createBooking = async (req, res) => {
-  const { userId, flightId, seatNumber, status, payment } = req.body;
-
+  const {
+    name,
+    email,
+    firstName,
+    lastName,
+    dateOfBirth,
+    flightId,
+    status,
+    seatNumber,
+    payment,
+  } = req.body;
   try {
+    const newOrderer = await prisma.user.create({
+      data: {
+        name,
+        email,
+        role: "CUSTOMER",
+      },
+    });
+
+    const newPassenger = await prisma.passenger.create({
+      data: {
+        firstName,
+        lastName,
+        dateOfBirth: new Date(dateOfBirth),
+      },
+    });
+
     const newBooking = await prisma.booking.create({
       data: {
-        userId,
+        userId: newOrderer.id,
+        passengerId: newPassenger.id,
         flightId,
         bookingDate: new Date(),
         status,
@@ -24,12 +50,16 @@ const createBooking = async (req, res) => {
       },
       include: {
         user: true,
+        passenger: true,
         flight: true,
         payment: true,
       },
     });
 
-    res.status(201).send(newBooking);
+    res.status(201).send({
+      message: "Success create booking",
+      data: { newOrderer, newPassenger, newBooking },
+    });
   } catch (error) {
     console.error("Error creating booking: ", error);
     res.status(500).send({
@@ -50,7 +80,7 @@ const getBookingById = async (prisma, bookingId) => {
         id: bookingId,
       },
       include: {
-        user: true,
+        passenger: true,
         flight: true,
         payment: true,
       },
@@ -76,7 +106,7 @@ const getAllBookings = async (prisma) => {
   try {
     const result = await prisma.booking.findMany({
       include: {
-        user: true,
+        passenger: true,
         flight: true,
         payment: true,
       },
@@ -175,7 +205,7 @@ const updateBookingFull = async (req, res) => {
           : undefined,
       },
       include: {
-        user: true,
+        passenger: true,
         flight: true,
         payment: true,
       },
