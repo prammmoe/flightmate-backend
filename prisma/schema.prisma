@@ -16,11 +16,11 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   name String
-  password String 
+  // password String 
   email String @unique
   role Role
   bookings Booking[]
-  staff Staff?
+  // staff Staff?
 
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
@@ -121,7 +121,7 @@ model Staff {
   department String
   flightCrew FlightCrew[]
 
-  user User @relation(fields: [userId], references: [id])
+  // user User @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
