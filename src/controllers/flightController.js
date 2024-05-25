@@ -80,6 +80,7 @@ const getAllFlights = async (prisma) => {
   try {
     const result = await prisma.flight.findMany({
       include: {
+        aircraft: true,
         departureAirport: true,
         arrivalAirport: true,
       },
