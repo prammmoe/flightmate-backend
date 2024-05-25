@@ -162,7 +162,7 @@ const updateFlight = async (req, res) => {
  */
 
 const updateFlightFull = async (req, res) => {
-  const airportId = parseInt(req.params.id);
+  const flightId = parseInt(req.params.id);
   const {
     flightNumber,
     departureAirportId,
@@ -261,16 +261,16 @@ const searchFlights = async (req, res) => {
   try {
     const flights = await prisma.flight.findMany({
       where: {
-        departureTime: {
-          // Filters for flights departing from the day from 00:00:00 to 23:59:59 (UTC time).
-          gte: new Date(`${travelDate}T00:00:00Z`),
-          lt: new Date(`${travelDate}T23:59:59Z`),
-        },
         departureAirport: {
           city: departureCity,
         },
         arrivalAirport: {
           city: arrivalCity,
+        },
+        departureTime: {
+          // Filters for flights departing from the day from 00:00:00 to 23:59:59 (UTC time).
+          gte: new Date(`${travelDate}T00:00:00Z`),
+          lt: new Date(`${travelDate}T23:59:59Z`),
         },
       },
       include: {

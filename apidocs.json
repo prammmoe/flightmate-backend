@@ -1,0 +1,43 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FlightMate API",
+    "description": "Daftar API FlightMate",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "Flight",
+      "description": "List of /flights endpoint"
+    },
+    {
+      "name": "Booking",
+      "description": "List of /bookings endpoint"
+    },
+    {
+      "name": "Airport",
+      "description": "List of /airport endpoint"
+    },
+    {
+      "name": "Aircraft",
+      "description": "List of /aircraft endpoint"
+    }
+  ],
+  "paths": {
+    "/flights": {
+      "get": {
+        "tags": ["Flight"],
+        "summary": "Get all flights",
+        "description": "",
+        "response": {
+          "200": {
+            "description": "success"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  }
+}
