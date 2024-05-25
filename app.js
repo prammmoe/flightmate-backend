@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(aircraftRoute);
 app.use(airportRoute);
-app.use('/flights', flightRoute);
+app.use(flightRoute);
 app.use(bookingRoute);
 
 // Index endpoint
