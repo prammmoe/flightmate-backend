@@ -4,6 +4,14 @@ const logger = require("morgan");
 const app = express();
 const port = process.env.PORT || 9000;
 
+/**
+ * @module Swagger
+ */
+
+const swaggerUI = require("swagger-ui-express");
+const apiDocs = require("./apidocs.json");
+app.use("/apidocs", swaggerUI.serve, swaggerUI.setup(apiDocs));
+
 // Init routing
 const aircraftRoute = require("./src/routes/aircraftRoute");
 const airportRoute = require("./src/routes/airportRoute");
