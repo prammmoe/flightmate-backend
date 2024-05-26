@@ -64,7 +64,7 @@ model Aircraft {
 
 model Flight {
   id Int @id @default(autoincrement())
-  flightNumber String @unique
+  flightNumber String
   flightClass String @default("Ekonomi")
   departureAirportId Int
   arrivalAirportId Int
@@ -72,6 +72,8 @@ model Flight {
   arrivalTime DateTime
   aircraftId Int
   status FlightStatus
+  airlines String
+  ticketPrice Int?
   bookings Booking[]
   flightCrew FlightCrew[]
 

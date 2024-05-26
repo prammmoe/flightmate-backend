@@ -35,6 +35,7 @@ const addFlight = async (req, res) => {
           arrivalTime: new Date(newFlightData.arrivalTime),
           aircraftId: newFlightData.aircraftId,
           status: newFlightData.status,
+          airlines: newFlightData.airlines,
         },
       });
       res.status(201).send(result);
