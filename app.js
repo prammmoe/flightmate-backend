@@ -6,7 +6,7 @@ const app = express();
 const port = process.env.PORT || 9000;
 
 const corsBaseUrl = "http://localhost:3000";
-const tunnelUrl = "https://hp5znbh8-9000.asse.devtunnels.ms";
+const tunnelUrl = "https://hp5znbh8-9000.asse.devtunnels.ms/";
 
 app.use(
   cors({
