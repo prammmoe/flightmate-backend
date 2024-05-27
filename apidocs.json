@@ -96,6 +96,60 @@
           }
         }
       }
+    },
+    "/bookings": {
+      "get": {
+        "tags": ["Booking"],
+        "summary": "Get all bookings",
+        "description": "Get booking data",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/airport": {
+      "get": {
+        "tags": ["Airport"],
+        "summary": "Get all airport",
+        "description": "Get airport data",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/aircraft": {
+      "get": {
+        "tags": ["Aircraft"],
+        "summary": "Get all aircrafts",
+        "description": "Get aircraft data",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   }
 }
