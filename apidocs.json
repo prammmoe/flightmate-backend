@@ -37,7 +37,7 @@
             "description": "Bad Request"
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal Server Error"
           }
         }
       },
@@ -45,10 +45,10 @@
         "tags": ["Flight"],
         "summary": "Create new flight data",
         "description": "Create new flights data, both single and bulk",
-        "consumes": "multipart/form-data",
+        "consumes": "application/json",
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
@@ -97,6 +97,79 @@
         }
       }
     },
+    "/flights/{id}": {
+      "get": {
+        "tags": ["Flight"],
+        "summary": "Get one flight data",
+        "description": "Get one flight data by its id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "flight ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/search": {
+      "get": {
+        "tags": ["Flight"],
+        "summary": "Get one flight data (query params)",
+        "description": "Get one flight data by its query params",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "departureCity",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Departure airport you want to search"
+          },
+          {
+            "in": "query",
+            "name": "arrivalCity",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Arrival airport you want to search"
+          },
+          {
+            "in": "query",
+            "name": "travelDate",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Departure time you want to search"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/bookings": {
       "get": {
         "tags": ["Booking"],
@@ -120,6 +193,49 @@
         "tags": ["Airport"],
         "summary": "Get all airport",
         "description": "Get airport data",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Airport"],
+        "summary": "Create new airport data",
+        "description": "Create new airport data, both single and bulk",
+        "consumes": "application/json",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "iataCode": {
+                    "type": "string"
+                  },
+                  "icaoCode": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success"
