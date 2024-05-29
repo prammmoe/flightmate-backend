@@ -1,6 +1,10 @@
 const prisma = require("../configs/prismaConfig");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
@@ -47,7 +51,7 @@ const loginUser = async (req, res) => {
       },
     });
 
-    if (!user) {
+    if (!user.email) {
       return res.status(401).send({
         message: "Invalid email",
       });
@@ -55,16 +59,29 @@ const loginUser = async (req, res) => {
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
-    if (!passwordMatch) {
-      return res.status(401).send({
-        message: "Invalid password",
+    if (passwordMatch) {
+      const payload = {
+        id: user.id,
+        email: user.email,
+        password: user.password,
+      };
+
+      const secret = process.env.JWT_SECRET;
+
+      const expiresIn = 60 * 60 * 1;
+
+      const token = jwt.sign(payload, secret, { expiresIn: expiresIn });
+
+      res.status(200).send({
+        message: "Login successful",
+        data: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+        token: token,
       });
     }
-
-    req.session.userId = user.id;
-    res.status(200).send({
-      message: "Login successful",
-    });
   } catch (error) {
     console.error("Error logging user: ", error);
     res.status(500).send({
