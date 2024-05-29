@@ -99,7 +99,7 @@ const logoutUser = async (req, res) => {
     }
 
     res.status(200).send({
-      message: "Logout successful",
+      message: "Logout success",
     });
   });
 };
