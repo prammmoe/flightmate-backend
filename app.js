@@ -27,14 +27,16 @@ const aircraftRoute = require("./src/routes/aircraftRoute");
 const airportRoute = require("./src/routes/airportRoute");
 const flightRoute = require("./src/routes/flightRoute");
 const bookingRoute = require("./src/routes/bookingRoute");
+const userRoute = require("./src/routes/userRoute");
 
 app.use(aircraftRoute);
 app.use(airportRoute);
 app.use(flightRoute);
 app.use(bookingRoute);
+app.use(userRoute);
 
 app.get("/", (req, res) => {
-  res.send("Pace bekasi daboy!");
+  res.send("FlightMate API!");
 });
 
 app.listen(port, () => {
