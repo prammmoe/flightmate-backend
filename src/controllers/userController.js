@@ -1,6 +1,5 @@
 const prisma = require("../configs/prismaConfig");
 const bcrypt = require("bcrypt");
-const session = require("express-session");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 
@@ -64,13 +63,16 @@ const loginUser = async (req, res) => {
         id: user.id,
         email: user.email,
         password: user.password,
+        email,
       };
 
-      const secret = process.env.JWT_SECRET;
+      const expiresIn = process.env.JWT_EXP;
 
-      const expiresIn = 60 * 60 * 1;
+      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: expiresIn,
+      });
 
-      const token = jwt.sign(payload, secret, { expiresIn: expiresIn });
+      res.cookie("tokenUser", token);
 
       res.status(200).send({
         message: "Login successful",
@@ -91,17 +93,16 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = async (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).send({
-        message: "Failed to logout user",
-      });
-    }
-
+  try {
+    res.clearCookie("tokenUser", { httpOnly: true });
     res.status(200).send({
       message: "Logout success",
     });
-  });
+  } catch (error) {
+    res.status(500).send({
+      message: "Internal server error",
+    });
+  }
 };
 
 const getUsers = async (req, res) => {
@@ -114,8 +115,8 @@ const getUsers = async (req, res) => {
 };
 
 module.exports = {
-  getUsers,
   registerUser,
   loginUser,
   logoutUser,
+  getUsers,
 };
