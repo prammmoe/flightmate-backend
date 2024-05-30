@@ -1,5 +1,9 @@
 const prisma = require("../configs/prismaConfig");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
@@ -61,6 +65,14 @@ const loginUser = async (req, res) => {
         password: user.password,
       };
 
+      const expiresIn = "24h";
+
+      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: expiresIn,
+      });
+
+      res.cookie("tokenCustomer", token);
+
       res.status(200).send({
         message: "Login successful",
         data: {
@@ -68,6 +80,7 @@ const loginUser = async (req, res) => {
           name: user.name,
           email: user.email,
         },
+        token: token,
       });
     }
   } catch (error) {
