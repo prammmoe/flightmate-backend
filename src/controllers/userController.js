@@ -63,9 +63,10 @@ const loginUser = async (req, res) => {
         id: user.id,
         email: user.email,
         password: user.password,
+        email,
       };
 
-      const expiresIn = "24h";
+      const expiresIn = process.env.JWT_EXP;
 
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: expiresIn,
@@ -104,8 +105,18 @@ const logoutUser = async (req, res) => {
   }
 };
 
+const getUsers = async (req, res) => {
+  try {
+    const users = await prisma.user.findMany();
+    res.status(200).send(users);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   logoutUser,
+  getUsers,
 };
