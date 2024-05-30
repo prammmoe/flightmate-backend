@@ -71,7 +71,7 @@ const loginUser = async (req, res) => {
         expiresIn: expiresIn,
       });
 
-      res.cookie("tokenCustomer", token);
+      res.cookie("tokenUser", token);
 
       res.status(200).send({
         message: "Login successful",
@@ -92,30 +92,19 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = async (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).send({
-        message: "Failed to logout user",
-      });
-    }
-
+  try {
+    res.clearCookie("tokenUser", { httpOnly: true });
     res.status(200).send({
       message: "Logout success",
     });
-  });
-};
-
-const getUsers = async (req, res) => {
-  try {
-    const users = await prisma.user.findMany();
-    res.status(200).send(users);
   } catch (error) {
-    console.error(error);
+    res.status(500).send({
+      message: "Internal server error",
+    });
   }
 };
 
 module.exports = {
-  getUsers,
   registerUser,
   loginUser,
   logoutUser,
