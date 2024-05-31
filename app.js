@@ -31,12 +31,14 @@ const airportRoute = require("./src/routes/airportRoute");
 const flightRoute = require("./src/routes/flightRoute");
 const bookingRoute = require("./src/routes/bookingRoute");
 const userRoute = require("./src/routes/userRoute");
+const paymentRoute = require("./src/routes/paymentRoute");
 
 app.use(aircraftRoute);
 app.use(airportRoute);
 app.use(flightRoute);
 app.use(bookingRoute);
 app.use(userRoute);
+app.use(paymentRoute);
 
 app.get("/", (req, res) => {
   res.send("FlightMate API!");

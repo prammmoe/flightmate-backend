@@ -19,7 +19,7 @@ model User {
   email String @unique
   password String @default("password")
   role Role
-  bookings Booking[]
+  bookings Booking[] 
   // staff Staff?
 
   createdAt DateTime @default(now())
@@ -106,7 +106,9 @@ model Booking {
 model Payment {
   id Int @id @default(autoincrement())
   bookingId Int @unique
+  productName String @default("Tiket Lion ir")
   amount Float
+  quantity Int @default(1)
   paymentDate DateTime
   paymentMethod PaymentMethod
   status PaymentStatus  
