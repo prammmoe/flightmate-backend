@@ -2,42 +2,56 @@
  * @module Payment
  * Use midtrans snap seamless to handle payment
  */
-
+const midtransClient = require("midtrans-client");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const midtransClient = require("midtrans-client");
-
-// Create Snap API instance
-let snap = new midtransClient.Snap({
-  isProduction: false,
-  serverKey: process.env.MIDTRANS_SERVER_KEY,
-  clientKey: process.env.MIDTRANS_CLIENT_KEY,
-});
+/**
+ * @function checkoutPayment
+ * Function to handle booking when checked out
+ */
 
 const checkoutPayment = async (req, res) => {
-  // Ini nanti diambil dari table payment
-
-  //   Nanti di-fetch dulu dari table payment di frontend baru dikirim ke sini
-  const { id, productName, amount, quantity, paymentDate } = req.body;
-
-  //   Ini parameter yang nanti dikirim ke Midtrans
-  let parameter = {
-    transaction_details: {
-      order_id: id,
-      gross_amount: amount * quantity,
-      paymentDate: paymentDate,
-    },
-    item_details: [
-      {
-        name: productName,
-        price: amount,
-        quantity: quantity,
-      },
-    ],
-  };
-
   try {
+    // Request params
+    const {
+      name,
+      phoneNo,
+      email,
+      paymentCode,
+      productName,
+      amount,
+      quantity,
+      paymentDate,
+    } = req.body;
+
+    // Snap API instance
+    let snap = new midtransClient.Snap({
+      isProduction: false,
+      serverKey: process.env.MIDTRANS_SERVER_KEY,
+    });
+
+    // Construct Midtrans minimum params request to generate
+    let parameter = {
+      transaction_details: {
+        order_id: paymentCode,
+        gross_amount: amount * quantity,
+        paymentDate: paymentDate,
+      },
+      item_details: [
+        {
+          name: productName,
+          price: amount,
+          quantity: quantity,
+        },
+      ],
+      customer_details: {
+        name: name,
+        phone: phoneNo,
+        email: email,
+      },
+    };
+
     const token = await snap.createTransactionToken(parameter);
     console.log("Payment token", token);
     res.status(200).send({ token });

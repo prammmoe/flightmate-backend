@@ -1,0 +1,261 @@
+const prisma = require("../src/configs/prismaConfig");
+
+async function main() {
+  // Seed Users
+  const users = await prisma.user.createMany({
+    data: [
+      {
+        name: "Admin User",
+        email: "admin@example.com",
+        password: "adminpassword",
+        role: "ADMIN",
+      },
+      {
+        name: "Customer User",
+        email: "customer@example.com",
+        password: "customerpassword",
+        role: "CUSTOMER",
+      },
+      {
+        name: "Staff User",
+        email: "staff@example.com",
+        password: "staffpassword",
+        role: "STAFF",
+      },
+    ],
+  });
+
+  // Seed Passengers
+  const passengers = await prisma.passenger.createMany({
+    data: [
+      {
+        firstName: "John",
+        lastName: "Doe",
+        dateOfBirth: new Date("1990-01-01"),
+      },
+      {
+        firstName: "Jane",
+        lastName: "Smith",
+        dateOfBirth: new Date("1985-05-15"),
+      },
+      {
+        firstName: "Alice",
+        lastName: "Johnson",
+        dateOfBirth: new Date("1978-11-23"),
+      },
+    ],
+  });
+
+  // Seed Airports
+  const airports = await prisma.airport.createMany({
+    data: [
+      {
+        name: "John F. Kennedy International Airport",
+        city: "New York",
+        country: "USA",
+        iataCode: "JFK",
+        icaoCode: "KJFK",
+      },
+      {
+        name: "Los Angeles International Airport",
+        city: "Los Angeles",
+        country: "USA",
+        iataCode: "LAX",
+        icaoCode: "KLAX",
+      },
+      {
+        name: "Heathrow Airport",
+        city: "London",
+        country: "UK",
+        iataCode: "LHR",
+        icaoCode: "EGLL",
+      },
+    ],
+  });
+
+  // Seed Aircraft
+  const aircraft = await prisma.aircraft.createMany({
+    data: [
+      {
+        model: "Boeing 747",
+        manufacturer: "Boeing",
+        seatingCapacity: 416,
+      },
+      {
+        model: "Airbus A320",
+        manufacturer: "Airbus",
+        seatingCapacity: 180,
+      },
+      {
+        model: "Boeing 777",
+        manufacturer: "Boeing",
+        seatingCapacity: 396,
+      },
+    ],
+  });
+
+  // Seed Flights
+  const flights = await prisma.flight.createMany({
+    data: [
+      {
+        flightNumber: "AA100",
+        flightClass: "Economy",
+        departureAirportId: 1, // JFK
+        arrivalAirportId: 2, // LAX
+        departureTime: new Date("2023-06-01T10:00:00.000Z"),
+        arrivalTime: new Date("2023-06-01T14:00:00.000Z"),
+        aircraftId: 1, // Boeing 747
+        status: "SCHEDULED",
+        airlines: "American Airlines",
+        ticketPrice: 300,
+      },
+      {
+        flightNumber: "BA200",
+        flightClass: "Economy",
+        departureAirportId: 2, // LAX
+        arrivalAirportId: 3, // LHR
+        departureTime: new Date("2023-06-02T15:00:00.000Z"),
+        arrivalTime: new Date("2023-06-02T23:00:00.000Z"),
+        aircraftId: 2, // Airbus A320
+        status: "ON_TIME",
+        airlines: "British Airways",
+        ticketPrice: 400,
+      },
+      {
+        flightNumber: "DL300",
+        flightClass: "Economy",
+        departureAirportId: 3, // LHR
+        arrivalAirportId: 1, // JFK
+        departureTime: new Date("2023-06-03T08:00:00.000Z"),
+        arrivalTime: new Date("2023-06-03T16:00:00.000Z"),
+        aircraftId: 3, // Boeing 777
+        status: "DELAYED",
+        airlines: "Delta Airlines",
+        ticketPrice: 500,
+      },
+    ],
+  });
+
+  // Seed Bookings
+  const bookings = await prisma.booking.createMany({
+    data: [
+      {
+        userId: 2, // Customer User
+        passengerId: 1, // John Doe
+        flightId: 1, // AA100
+        bookingDate: new Date(),
+        status: "CONFIRMED",
+        seatNumber: "12A",
+      },
+      {
+        userId: 2, // Customer User
+        passengerId: 2, // Jane Smith
+        flightId: 2, // BA200
+        bookingDate: new Date(),
+        status: "CONFIRMED",
+        seatNumber: "14B",
+      },
+      {
+        userId: 2, // Customer User
+        passengerId: 3, // Alice Johnson
+        flightId: 3, // DL300
+        bookingDate: new Date(),
+        status: "CONFIRMED",
+        seatNumber: "16C",
+      },
+    ],
+  });
+
+  // Seed Payments
+  const payments = await prisma.payment.createMany({
+    data: [
+      {
+        bookingId: 1, // First Booking
+        productName: "Flight Ticket",
+        amount: 300,
+        quantity: 1,
+        paymentDate: new Date(),
+        paymentMethod: "CREDIT_CARD",
+        status: "COMPLETED",
+      },
+      {
+        bookingId: 2, // Second Booking
+        productName: "Flight Ticket",
+        amount: 400,
+        quantity: 1,
+        paymentDate: new Date(),
+        paymentMethod: "DEBIT_CARD",
+        status: "COMPLETED",
+      },
+      {
+        bookingId: 3, // Third Booking
+        productName: "Flight Ticket",
+        amount: 500,
+        quantity: 1,
+        paymentDate: new Date(),
+        paymentMethod: "CREDIT_CARD",
+        status: "PENDING",
+      },
+    ],
+  });
+
+  // Seed Staff
+  const staff = await prisma.staff.createMany({
+    data: [
+      {
+        userId: 3, // Staff User
+        position: "Captain",
+        department: "Flight Operations",
+      },
+      {
+        userId: 1, // Admin User
+        position: "Co-Pilot",
+        department: "Flight Operations",
+      },
+    ],
+  });
+
+  // Seed FlightCrew
+  const flightCrew = await prisma.flightCrew.createMany({
+    data: [
+      {
+        flightId: 1, // AA100
+        staffId: 1, // First Staff
+        role: "PILOT",
+      },
+      {
+        flightId: 2, // BA200
+        staffId: 2, // Second Staff
+        role: "CO_PILOT",
+      },
+      {
+        flightId: 3, // DL300
+        staffId: 1, // First Staff
+        role: "PILOT",
+      },
+    ],
+  });
+
+  console.log({
+    users,
+    passengers,
+    airports,
+    aircraft,
+    flights,
+    bookings,
+    payments,
+    staff,
+    flightCrew,
+  });
+}
+
+main()
+  .then(async () => {
+    console.log("Seeding finished.");
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
