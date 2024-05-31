@@ -23,21 +23,30 @@ const checkoutPayment = async (req, res) => {
 
   //   Ini parameter yang nanti dikirim ke Midtrans
   let parameter = {
-    item_details: {
-      name: productName,
-      price: amount,
-      quantity: quantity,
-    },
     transaction_details: {
       order_id: id,
       gross_amount: amount * quantity,
       paymentDate: paymentDate,
     },
+    item_details: [
+      {
+        name: productName,
+        price: amount,
+        quantity: quantity,
+      },
+    ],
   };
 
-  const token = await snap.createTransactionToken(parameter);
-  console.log("Payment token", token);
-  res.status(200).send({ token });
+  try {
+    const token = await snap.createTransactionToken(parameter);
+    console.log("Payment token", token);
+    res.status(200).send({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      message: "Internal server error",
+    });
+  }
 };
 
 module.exports = { checkoutPayment };
