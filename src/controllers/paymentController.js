@@ -13,7 +13,7 @@ dotenv.config();
 
 const checkoutPayment = async (req, res) => {
   try {
-    // Request params
+    // Request body
     const {
       name,
       phoneNo,
@@ -52,9 +52,11 @@ const checkoutPayment = async (req, res) => {
       },
     };
 
-    const token = await snap.createTransactionToken(parameter);
-    console.log("Payment token", token);
-    res.status(200).send({ token });
+    const transaction = await snap.createTransaction(parameter);
+    res.status(201).send({
+      message: "Create payment success",
+      token: transaction.token,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send({
@@ -63,4 +65,26 @@ const checkoutPayment = async (req, res) => {
   }
 };
 
-module.exports = { checkoutPayment };
+const getPaymentStatus = async (req, res) => {
+  try {
+    const { order_id } = req.params;
+
+    let snap = new midtransClient.Snap({
+      isProduction: false,
+      serverKey: process.env.MIDTRANS_SERVER_KEY,
+    });
+
+    const status = await snap.transaction.status(order_id);
+
+    res.status(200).send({
+      message: `Get status by order id ${order_id} success`,
+      data: status,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: "Internal server error",
+    });
+  }
+};
+
+module.exports = { checkoutPayment, getPaymentStatus };

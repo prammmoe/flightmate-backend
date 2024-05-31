@@ -4,5 +4,5 @@ const { verifyToken } = require("../middlewares/auth");
 const paymentController = require("../controllers/paymentController");
 
 router.post("/payment", verifyToken, paymentController.checkoutPayment);
-
+router.get("/status/:order_id", paymentController.getPaymentStatus);
 module.exports = router;
