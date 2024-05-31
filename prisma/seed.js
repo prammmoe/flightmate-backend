@@ -30,7 +30,7 @@ async function main() {
     data: [
       {
         firstName: "John",
-        lastName: "Doe",
+        lastName: "Cena",
         dateOfBirth: new Date("1990-01-01"),
       },
       {
