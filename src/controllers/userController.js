@@ -5,6 +5,11 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
+/**
+ * @function registerUser
+ * Function to register user to the application
+ */
+
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -39,6 +44,11 @@ const registerUser = async (req, res) => {
     });
   }
 };
+
+/**
+ * @function loginUser
+ * Function to log user to the application
+ */
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -92,6 +102,11 @@ const loginUser = async (req, res) => {
   }
 };
 
+/**
+ * @function logoutUser
+ * Function to logout user from the application
+ */
+
 const logoutUser = async (req, res) => {
   try {
     res.clearCookie("tokenUser", { httpOnly: true });
@@ -105,6 +120,11 @@ const logoutUser = async (req, res) => {
   }
 };
 
+/**
+ * @function getUsers
+ * Function to get all users
+ */
+
 const getUsers = async (req, res) => {
   try {
     const users = await prisma.user.findMany();
@@ -113,6 +133,11 @@ const getUsers = async (req, res) => {
     console.error(error);
   }
 };
+
+/**
+ * @exports module
+ * Exports all the function
+ */
 
 module.exports = {
   registerUser,

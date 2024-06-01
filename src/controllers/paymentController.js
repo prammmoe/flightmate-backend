@@ -2,9 +2,40 @@
  * @module Payment
  * Use midtrans snap seamless to handle payment
  */
+
+const prisma = require("../configs/prismaConfig");
 const midtransClient = require("midtrans-client");
 const dotenv = require("dotenv");
+const { FRONT_END_URL } = require("../utils/constant");
+
 dotenv.config();
+
+/**
+ * @function getPaymentById
+ * Function to get unique payment
+ */
+
+const getPaymentById = async (req, res) => {
+  try {
+    const paymentCode = parseInt(req.query.paymentCode);
+
+    const payment = await prisma.payment.findUnique({
+      where: {
+        paymentCode: paymentCode,
+      },
+    });
+
+    res.status(200).send({
+      message: "Success get payment",
+      data: payment,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      message: "Internal server error",
+    });
+  }
+};
 
 /**
  * @function checkoutPayment
@@ -13,7 +44,7 @@ dotenv.config();
 
 const checkoutPayment = async (req, res) => {
   try {
-    // Request body
+    // Request body populated from GET /bookings
     const {
       name,
       phoneNo,
@@ -50,12 +81,18 @@ const checkoutPayment = async (req, res) => {
         phone: phoneNo,
         email: email,
       },
+      callbacks: {
+        finish: `${FRONT_END_URL}`,
+        error: `${FRONT_END_URL}`,
+        pedning: `${FRONT_END_URL}`,
+      },
     };
 
     const transaction = await snap.createTransaction(parameter);
     res.status(201).send({
       message: "Create payment success",
       token: transaction.token,
+      redirect: parameter.callbacks,
     });
   } catch (error) {
     console.error(error);
@@ -67,17 +104,17 @@ const checkoutPayment = async (req, res) => {
 
 const getPaymentStatus = async (req, res) => {
   try {
-    const { order_id } = req.params;
+    const payment = parseInt(req.params.order_id);
 
     let snap = new midtransClient.Snap({
       isProduction: false,
       serverKey: process.env.MIDTRANS_SERVER_KEY,
     });
 
-    const status = await snap.transaction.status(order_id);
+    const status = await snap.transaction.status(payment.order_id);
 
     res.status(200).send({
-      message: `Get status by order id ${order_id} success`,
+      message: `Get status by order id ${payment} success`,
       data: status,
     });
   } catch (error) {
@@ -87,4 +124,4 @@ const getPaymentStatus = async (req, res) => {
   }
 };
 
-module.exports = { checkoutPayment, getPaymentStatus };
+module.exports = { getPaymentById, checkoutPayment, getPaymentStatus };
