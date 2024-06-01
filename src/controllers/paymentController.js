@@ -2,10 +2,18 @@
  * @module Payment
  * Use midtrans snap seamless to handle payment
  */
+
 const prisma = require("../configs/prismaConfig");
 const midtransClient = require("midtrans-client");
 const dotenv = require("dotenv");
+const { FRONT_END_URL } = require("../utils/constant");
+
 dotenv.config();
+
+/**
+ * @function getPaymentById
+ * Function to get unique payment
+ */
 
 const getPaymentById = async (req, res) => {
   try {
@@ -74,9 +82,9 @@ const checkoutPayment = async (req, res) => {
         email: email,
       },
       callbacks: {
-        finish: ``,
-        error: ``,
-        pedning: ``,
+        finish: `${FRONT_END_URL}`,
+        error: `${FRONT_END_URL}`,
+        pedning: `${FRONT_END_URL}`,
       },
     };
 
@@ -84,6 +92,7 @@ const checkoutPayment = async (req, res) => {
     res.status(201).send({
       message: "Create payment success",
       token: transaction.token,
+      redirect: parameter.callbacks,
     });
   } catch (error) {
     console.error(error);
@@ -95,17 +104,17 @@ const checkoutPayment = async (req, res) => {
 
 const getPaymentStatus = async (req, res) => {
   try {
-    const { order_id } = req.params;
+    const payment = parseInt(req.params.order_id);
 
     let snap = new midtransClient.Snap({
       isProduction: false,
       serverKey: process.env.MIDTRANS_SERVER_KEY,
     });
 
-    const status = await snap.transaction.status(order_id);
+    const status = await snap.transaction.status(payment.order_id);
 
     res.status(200).send({
-      message: `Get status by order id ${order_id} success`,
+      message: `Get status by order id ${payment} success`,
       data: status,
     });
   } catch (error) {
