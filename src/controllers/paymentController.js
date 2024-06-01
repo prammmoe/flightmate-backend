@@ -2,9 +2,32 @@
  * @module Payment
  * Use midtrans snap seamless to handle payment
  */
+const prisma = require("../configs/prismaConfig");
 const midtransClient = require("midtrans-client");
 const dotenv = require("dotenv");
 dotenv.config();
+
+const getPaymentById = async (req, res) => {
+  try {
+    const paymentCode = parseInt(req.query.paymentCode);
+
+    const payment = await prisma.payment.findUnique({
+      where: {
+        paymentCode: paymentCode,
+      },
+    });
+
+    res.status(200).send({
+      message: "Success get payment",
+      data: payment,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      message: "Internal server error",
+    });
+  }
+};
 
 /**
  * @function checkoutPayment
@@ -13,7 +36,7 @@ dotenv.config();
 
 const checkoutPayment = async (req, res) => {
   try {
-    // Request body
+    // Request body populated from GET /bookings
     const {
       name,
       phoneNo,
@@ -49,6 +72,11 @@ const checkoutPayment = async (req, res) => {
         name: name,
         phone: phoneNo,
         email: email,
+      },
+      callbacks: {
+        finish: ``,
+        error: ``,
+        pedning: ``,
       },
     };
 
@@ -87,4 +115,4 @@ const getPaymentStatus = async (req, res) => {
   }
 };
 
-module.exports = { checkoutPayment, getPaymentStatus };
+module.exports = { getPaymentById, checkoutPayment, getPaymentStatus };
