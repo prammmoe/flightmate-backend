@@ -297,6 +297,23 @@ const searchFlights = async (req, res) => {
   }
 };
 
+const getAllCities = async (req, res) => {
+  try {
+    const cities = await prisma.airport.findMany({
+      select: {
+        city: true,
+      },
+      distinct: ["city"],
+    });
+    res.status(200).send(cities);
+  } catch (error) {
+    console.error("Error fetching cities:", error);
+    res.status(500).send({
+      message: "An error occurred while fetching cities",
+    });
+  }
+};
+
 /**
  * @module
  * Exports all the function
@@ -306,6 +323,7 @@ module.exports = {
   getFlightById,
   getAllFlights,
   getFlight,
+  getAllCities, 
   addFlight,
   deleteFlight,
   updateFlight,
