@@ -102,12 +102,15 @@ const getAirport = async (req, res) => {
         res.status(200).send(airports);
       } catch (error) {
         res.status(404).send({
-          message: error.message,
+          message: "Airport not found",
         });
       }
     } else {
       const airports = await getAllAirports(prisma);
-      res.status(200).send(airports);
+      res.status(200).send({
+        message: "Success get all airports data",
+        data: airports,
+      });
     }
   } catch (error) {
     console.log(error);
@@ -146,7 +149,10 @@ const addAirport = async (req, res) => {
           iataCode: newAirportData.iataCode,
         },
       });
-      res.status(201).send(result);
+      res.status(201).send({
+        message: "Success create new airports data",
+        data: result,
+      });
     }
   } catch (error) {
     console.log("Error adding airport: ", error);
@@ -158,7 +164,7 @@ const addAirport = async (req, res) => {
 
 /**
  * @function deleteAirport
- * Function to delete airport, only by using id
+ * Function to delete airport by its id
  */
 
 const deleteAirport = async (req, res) => {
@@ -202,7 +208,10 @@ const updateAirport = async (req, res) => {
       data: updateData,
     });
 
-    res.status(200).send(updatedAirport);
+    res.status(200).send({
+      message: "Success update airport",
+      data: updatedAirport,
+    });
   } catch (error) {
     console.error("Error updating airport: ", error);
     if (error.code === "P2025") {
@@ -249,7 +258,10 @@ const updateAirportFull = async (req, res) => {
       },
     });
 
-    res.status(200).send(updatedAirport);
+    res.status(200).send({
+      message: "Success update airport data",
+      data: updatedAirport,
+    });
   } catch (error) {
     console.error("Error updating airport: ", error);
     if (error.code === "P2025") {

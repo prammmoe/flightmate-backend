@@ -6,7 +6,7 @@
 const prisma = require("../configs/prismaConfig");
 const midtransClient = require("midtrans-client");
 const dotenv = require("dotenv");
-const { FRONT_END_URL } = require("../utils/constant");
+const { FRONT_END_URL, MIDTRANS_SERVER_KEY } = require("../utils/constant");
 
 dotenv.config();
 
@@ -59,7 +59,7 @@ const checkoutPayment = async (req, res) => {
     // Snap API instance
     let snap = new midtransClient.Snap({
       isProduction: false,
-      serverKey: process.env.MIDTRANS_SERVER_KEY,
+      serverKey: MIDTRANS_SERVER_KEY,
     });
 
     // Construct Midtrans minimum params request to generate
@@ -108,7 +108,7 @@ const getPaymentStatus = async (req, res) => {
 
     let snap = new midtransClient.Snap({
       isProduction: false,
-      serverKey: process.env.MIDTRANS_SERVER_KEY,
+      serverKey: MIDTRANS_SERVER_KEY,
     });
 
     const status = await snap.transaction.status(payment.order_id);
