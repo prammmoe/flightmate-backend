@@ -102,12 +102,15 @@ const getAirport = async (req, res) => {
         res.status(200).send(airports);
       } catch (error) {
         res.status(404).send({
-          message: error.message,
+          message: "Airport not found",
         });
       }
     } else {
       const airports = await getAllAirports(prisma);
-      res.status(200).send(airports);
+      res.status(200).send({
+        message: "Success get all airports data",
+        data: airports,
+      });
     }
   } catch (error) {
     console.log(error);
@@ -146,7 +149,10 @@ const addAirport = async (req, res) => {
           iataCode: newAirportData.iataCode,
         },
       });
-      res.status(201).send(result);
+      res.status(201).send({
+        message: "Success create new airports data",
+        data: result,
+      });
     }
   } catch (error) {
     console.log("Error adding airport: ", error);

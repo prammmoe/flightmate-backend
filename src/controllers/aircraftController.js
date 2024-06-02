@@ -79,7 +79,7 @@ const getAllAirCrafts = async (prisma) => {
   }
 };
 
-/***
+/**
  * @function getAircraft
  * Parent function of getAircraftById, getAircraftByParams & getAllAirCrafts for handle bulk and single request of the aircraft data.
  */
@@ -91,7 +91,10 @@ const getAircraft = async (req, res) => {
     if (aircraftId) {
       const aircraft = await getAirCraftById(prisma, aircraftId);
       if (aircraft) {
-        res.status(200).send(aircraft);
+        res.status(200).send({
+          message: "Success get aircraft data",
+          data: aircraft,
+        });
       } else {
         res.status(404).send({
           message: "Aircraft not found",
@@ -100,7 +103,10 @@ const getAircraft = async (req, res) => {
     } else if (Object.keys(query).length > 0) {
       try {
         const aircrafts = await getAircraftByParams(prisma, query);
-        res.status(200).send(aircrafts);
+        res.status(200).send({
+          message: "Success get aircraft data",
+          data: aircrafts,
+        });
       } catch (error) {
         res.status(400).send({
           message: error.message,
@@ -133,8 +139,8 @@ const addAircraft = async (req, res) => {
         data: newAircraftData,
       });
       res.status(200).send({
-        data: createdAircraft,
         message: "Success create new aircraft data.",
+        data: createdAircraft,
       });
     } else {
       // Single addition
@@ -145,7 +151,10 @@ const addAircraft = async (req, res) => {
           seatingCapacity: newAircraftData.seatingCapacity,
         },
       });
-      res.status(201).send(result);
+      res.status(201).send({
+        message: "Success create aircrafts data",
+        data: result,
+      });
     }
   } catch (error) {
     console.log("Error adding aircraft: ", error);
@@ -201,7 +210,10 @@ const updateAircraft = async (req, res) => {
       data: updateData,
     });
 
-    res.status(200).send(updatedAircraft);
+    res.status(200).send({
+      message: "Success update aircraft data",
+      data: updatedAircraft,
+    });
   } catch (error) {
     console.error("Error updating aircraft: ", error);
     if (error.code === "P2025") {
@@ -239,7 +251,10 @@ const updateAircraftFull = async (req, res) => {
         seatingCapacity,
       },
     });
-    res.status(200).send(updatedAircraft);
+    res.status(200).send({
+      message: "Success update aircraft data",
+      data: updatedAircraft,
+    });
   } catch (error) {
     console.error("Error updating aircraft: ", error);
     if (error.code === "P2025") {
