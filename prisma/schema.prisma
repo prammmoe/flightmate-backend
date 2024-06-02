@@ -17,10 +17,9 @@ model User {
   id Int @id @default(autoincrement())
   name String
   email String @unique
+  phoneNo String @default("6281247016022")
   password String @default("password")
-  role Role
   bookings Booking[] 
-  // staff Staff?
 
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
@@ -75,7 +74,7 @@ model Flight {
   airlines String
   ticketPrice Int?
   bookings Booking[]
-  flightCrew FlightCrew[]
+  // flightCrew FlightCrew[]
 
   departureAirport Airport @relation("departures", fields: [departureAirportId], references: [id])
   arrivalAirport Airport @relation("arrivals", fields: [arrivalAirportId], references: [id])
@@ -92,8 +91,8 @@ model Booking {
   flightId Int
   bookingDate DateTime
   status BookingStatus
-  seatNumber String
   payment Payment?
+  luggageWeight Int @default(20)
 
   user User @relation(fields: [userId], references: [id])
   passenger Passenger @relation(fields: [passengerId], references: [id])
@@ -109,9 +108,7 @@ model Payment {
   productName String @default("Tiket Lion Air")
   amount Float
   quantity Int @default(1)
-  paymentDate DateTime
-  paymentMethod PaymentMethod
-  status PaymentStatus  
+  paymentDate DateTime @default(now())
 
   booking Booking @relation(fields: [bookingId], references: [id])
 
@@ -119,37 +116,31 @@ model Payment {
   updatedAt DateTime @updatedAt
 }
 
-model Staff {
-  id Int @id @default(autoincrement())
-  userId Int @unique
-  position String 
-  department String
-  flightCrew FlightCrew[]
+// model Staff {
+//   id Int @id @default(autoincrement())
+//   userId Int @unique
+//   position String 
+//   department String
+//   flightCrew FlightCrew[]
 
-  // user User @relation(fields: [userId], references: [id])
+//   // user User @relation(fields: [userId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
 
-model FlightCrew {
-  id Int @id @default(autoincrement())
-  flightId Int
-  staffId Int
-  role CrewRole
+// model FlightCrew {
+//   id Int @id @default(autoincrement())
+//   flightId Int
+//   staffId Int
+//   role CrewRole
 
-  flight Flight @relation(fields: [flightId], references: [id])
-  staff Staff @relation(fields: [staffId], references: [id])
+//   flight Flight @relation(fields: [flightId], references: [id])
+//   staff Staff @relation(fields: [staffId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-enum Role {
-  ADMIN
-  CUSTOMER 
-  STAFF
-}
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
 
 enum FlightStatus {
   SCHEDULED 
@@ -164,16 +155,16 @@ enum BookingStatus {
   PENDING
 }
 
-enum PaymentMethod {
-  CREDIT_CARD
-  DEBIT_CARD
-}
+// enum PaymentMethod {
+//   CREDIT_CARD
+//   DEBIT_CARD
+// }
 
-enum PaymentStatus {
-  COMPLETED
-  FAILED
-  PENDING
-}
+// enum PaymentStatus {
+//   COMPLETED
+//   FAILED
+//   PENDING
+// }
 
 enum CrewRole {
   PILOT
