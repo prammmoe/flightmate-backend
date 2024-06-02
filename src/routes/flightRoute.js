@@ -8,5 +8,6 @@ router.put("/flights/:id", flightController.updateFlightFull);
 router.patch("/flights/:id", flightController.updateFlight);
 router.delete("/flights/:id", flightController.deleteFlight);
 router.get("/search", flightController.searchFlights);
+router.get("/cities", flightController.getAllCities);
 
 module.exports = router;
