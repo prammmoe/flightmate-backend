@@ -202,7 +202,10 @@ const updateAirport = async (req, res) => {
       data: updateData,
     });
 
-    res.status(200).send(updatedAirport);
+    res.status(200).send({
+      message: "Success update airport",
+      data: updatedAirport,
+    });
   } catch (error) {
     console.error("Error updating airport: ", error);
     if (error.code === "P2025") {
@@ -249,7 +252,10 @@ const updateAirportFull = async (req, res) => {
       },
     });
 
-    res.status(200).send(updatedAirport);
+    res.status(200).send({
+      message: "Success update airport data",
+      data: updatedAirport,
+    });
   } catch (error) {
     console.error("Error updating airport: ", error);
     if (error.code === "P2025") {

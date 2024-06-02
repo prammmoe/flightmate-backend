@@ -190,12 +190,13 @@ const updateBooking = async (req, res) => {
 
 const updateBookingFull = async (req, res) => {
   const bookingId = parseInt(req.params.id);
-  const { status, seatNumber, payment } = req.body;
+  const { bookingDate, status, seatNumber, payment } = req.body;
 
   try {
     const updatedBooking = await prisma.booking.update({
       where: { id: bookingId },
       data: {
+        bookingDate,
         status,
         seatNumber,
         payment: payment
