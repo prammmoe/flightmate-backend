@@ -6,26 +6,12 @@ const prisma = require("../configs/prismaConfig");
  */
 
 const createBooking = async (req, res) => {
-  const {
-    name,
-    email,
-    firstName,
-    lastName,
-    dateOfBirth,
-    flightId,
-    status,
-    seatNumber,
-    payment,
-  } = req.body;
-  try {
-    const newOrderer = await prisma.user.create({
-      data: {
-        name,
-        email,
-        role: "CUSTOMER",
-      },
-    });
+  const { userId, firstName, lastName, dateOfBirth, flightId, status, luggageWeight } =
+    req.body;
 
+  // Get the user ID from the request object (set by the verifyToken middleware)
+
+  try {
     const newPassenger = await prisma.passenger.create({
       data: {
         firstName,
@@ -36,29 +22,23 @@ const createBooking = async (req, res) => {
 
     const newBooking = await prisma.booking.create({
       data: {
-        userId: newOrderer.id,
+        userId: userId,
         passengerId: newPassenger.id,
         flightId,
         bookingDate: new Date(),
         status,
-        seatNumber,
-        payment: payment
-          ? {
-              create: payment,
-            }
-          : undefined,
+        luggageWeight,
       },
       include: {
         user: true,
         passenger: true,
         flight: true,
-        payment: true,
       },
     });
 
     res.status(201).send({
       message: "Success create booking",
-      data: { newOrderer, newPassenger, newBooking },
+      data: newBooking,
     });
   } catch (error) {
     console.error("Error creating booking: ", error);

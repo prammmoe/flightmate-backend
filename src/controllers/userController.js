@@ -12,7 +12,7 @@ dotenv.config();
  */
 
 const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, phoneNo, password } = req.body;
 
   const confirmPassword = req.body.password;
 
@@ -29,8 +29,8 @@ const registerUser = async (req, res) => {
       data: {
         name,
         email,
+        phoneNo,
         password: hashedPassword,
-        role: "CUSTOMER",
       },
     });
 
@@ -73,16 +73,19 @@ const loginUser = async (req, res) => {
       const payload = {
         id: user.id,
         email: user.email,
+        phoneNo: user.phoneNo,
         password: user.password,
       };
 
       const expiresIn = JWT_EXP;
 
+      console.log("JWT_SECRET in login:", JWT_SECRET);
+
       const token = jwt.sign(payload, JWT_SECRET, {
         expiresIn: expiresIn,
       });
 
-      res.cookie("tokenUser", token);
+      res.cookie("tokenUser", token, { httpOnly: true });
 
       res.status(200).send({
         message: "Login successful",
@@ -90,9 +93,12 @@ const loginUser = async (req, res) => {
           id: user.id,
           name: user.name,
           email: user.email,
+          phoneNo: user.phoneNo,
         },
         token: token,
       });
+
+      console.log(token);
     }
   } catch (error) {
     console.error("Error logging user: ", error);

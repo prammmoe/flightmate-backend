@@ -15,26 +15,109 @@ dotenv.config();
  * Function to get unique payment
  */
 
-const getPaymentById = async (req, res) => {
+const getPaymentById = async (prisma, paymentCode) => {
   try {
-    const paymentCode = parseInt(req.query.paymentCode);
-
     const payment = await prisma.payment.findUnique({
       where: {
         paymentCode: paymentCode,
       },
     });
 
-    res.status(200).send({
-      message: "Success get payment",
-      data: payment,
-    });
+    return payment;
   } catch (error) {
     console.error(error);
+    throw error;
+  }
+};
+
+const getAllPayments = async (prisma) => {
+  try {
+    const paymentData = await prisma.payment.findMany();
+
+    return paymentData;
+  } catch (error) {
+    console.error("Error in retrieving payment data: ", error);
+    throw error;
+  }
+};
+
+const getPayment = async (req, res) => {
+  const paymentCode = parseInt(req.params.id);
+  try {
+    if (paymentCode) {
+      const payment = await getPaymentById(prisma, paymentCode);
+      if (payment) {
+        res.status(200).send({
+          message: `Success get payment data with id ${paymentCode}`,
+          data: payment,
+        });
+      } else {
+        res.status(404).send({
+          error: "Payment not found",
+        });
+      }
+    } else {
+      const payments = await getAllPayments(prisma);
+      res.status(200).send({
+        message: "Success get all payments",
+        data: payments,
+      });
+    }
+  } catch (error) {}
+};
+
+const createPayment = async (req, res) => {
+  try {
+    const {
+      paymentCode,
+      productName,
+      amount,
+      quantity,
+      paymentDate,
+      bookingId,
+    } = req.body;
+
+    const paymentData = await prisma.payment.create({
+      data: {
+        paymentCode,
+        productName,
+        amount,
+        quantity,
+        paymentDate: paymentDate ? new Date(paymentDate) : undefined,
+        booking: {
+          connect: {
+            id: bookingId,
+          },
+        },
+      },
+    });
+
+    res.status(200).send({
+      message: "Success create payment",
+      data: paymentData,
+    });
+  } catch (error) {
+    console.error("Error in generating payment: ", error);
     res.status(500).send({
       message: "Internal server error",
     });
   }
+};
+
+const deletePayment = async (req, res) => {
+  try {
+    const paymentId = req.params.id;
+
+    await prisma.payment.delete({
+      where: {
+        id: paymentId,
+      },
+    });
+
+    res.status(200).send({
+      message: `Success delete payment by id:${paymentId}`,
+    });
+  } catch (error) {}
 };
 
 /**
@@ -124,4 +207,12 @@ const getPaymentStatus = async (req, res) => {
   }
 };
 
-module.exports = { getPaymentById, checkoutPayment, getPaymentStatus };
+module.exports = {
+  getPayment,
+  getAllPayments,
+  createPayment,
+  getPaymentById,
+  deletePayment,
+  checkoutPayment,
+  getPaymentStatus,
+};
