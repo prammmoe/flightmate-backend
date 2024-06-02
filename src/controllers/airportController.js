@@ -164,7 +164,7 @@ const addAirport = async (req, res) => {
 
 /**
  * @function deleteAirport
- * Function to delete airport, only by using id
+ * Function to delete airport by its id
  */
 
 const deleteAirport = async (req, res) => {
