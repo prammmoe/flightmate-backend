@@ -6,8 +6,15 @@ const prisma = require("../configs/prismaConfig");
  */
 
 const createBooking = async (req, res) => {
-  const { userId, firstName, lastName, dateOfBirth, flightId, status, luggageWeight } =
-    req.body;
+  const {
+    userId,
+    firstName,
+    lastName,
+    dateOfBirth,
+    flightId,
+    status,
+    luggageWeight,
+  } = req.body;
 
   // Get the user ID from the request object (set by the verifyToken middleware)
 
