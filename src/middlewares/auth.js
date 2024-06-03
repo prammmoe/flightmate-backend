@@ -19,7 +19,7 @@ const verifyToken = (req, res, next) => {
   } catch (error) {
     res.clearCookie("tokenUser", { httpOnly: true });
     res.status(403).send({
-      message: "Forbidden",
+      message: "Forbidden, you cannot access this route",
     });
   }
 };
