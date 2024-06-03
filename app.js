@@ -41,7 +41,7 @@ app.use(userRoute);
 app.use(paymentRoute);
 
 app.get("/", (req, res) => {
-  res.send("FlightMate API!");
+  res.send("Welcome to FlightMate API!");
 });
 
 app.listen(port, () => {
