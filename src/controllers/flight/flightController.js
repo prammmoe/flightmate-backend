@@ -1,4 +1,4 @@
-const prisma = require("../configs/prismaConfig");
+const prisma = require("../../configs/prismaConfig");
 
 /**
  * @function addFlight
@@ -323,7 +323,7 @@ module.exports = {
   getFlightById,
   getAllFlights,
   getFlight,
-  getAllCities, 
+  getAllCities,
   addFlight,
   deleteFlight,
   updateFlight,

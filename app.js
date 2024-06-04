@@ -3,6 +3,7 @@ const logger = require("morgan");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
+const router = require("./src/routes");
 
 const app = express();
 const port = process.env.PORT || 9000;
@@ -17,6 +18,7 @@ app.use(
   })
 );
 
+// Swagger configs
 const swaggerUI = require("swagger-ui-express");
 const apiDocs = require("./apidocs.json");
 app.use("/apidocs", swaggerUI.serve, swaggerUI.setup(apiDocs));
@@ -26,19 +28,7 @@ app.use(logger("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const aircraftRoute = require("./src/routes/aircraftRoute");
-const airportRoute = require("./src/routes/airportRoute");
-const flightRoute = require("./src/routes/flightRoute");
-const bookingRoute = require("./src/routes/bookingRoute");
-const userRoute = require("./src/routes/userRoute");
-const paymentRoute = require("./src/routes/paymentRoute");
-
-app.use(aircraftRoute);
-app.use(airportRoute);
-app.use(flightRoute);
-app.use(bookingRoute);
-app.use(userRoute);
-app.use(paymentRoute);
+app.use(router);
 
 app.get("/", (req, res) => {
   res.send("Welcome to FlightMate API!");

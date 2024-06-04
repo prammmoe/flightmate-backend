@@ -3,10 +3,10 @@
  * Use midtrans snap seamless to handle payment
  */
 
-const prisma = require("../configs/prismaConfig");
+const prisma = require("../../configs/prismaConfig");
 const midtransClient = require("midtrans-client");
 const dotenv = require("dotenv");
-const { FRONT_END_URL, MIDTRANS_SERVER_KEY } = require("../utils/constant");
+const { FRONT_END_URL, MIDTRANS_SERVER_KEY } = require("../../utils/constant");
 
 dotenv.config();
 
