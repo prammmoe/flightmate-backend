@@ -1,8 +1,8 @@
-const prisma = require("../configs/prismaConfig");
+const prisma = require("../../configs/prismaConfig");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const { JWT_EXP, JWT_SECRET } = require("../utils/constant");
+const { JWT_EXP, JWT_SECRET } = require("../../utils/constant");
 
 dotenv.config();
 

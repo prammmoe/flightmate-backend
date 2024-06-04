@@ -1,4 +1,4 @@
-const prisma = require("../configs/prismaConfig");
+const prisma = require("../../configs/prismaConfig");
 
 /***
  * @function getAirCraftById
