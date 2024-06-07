@@ -7,20 +7,20 @@ async function main() {
       {
         name: "Admin User",
         email: "admin@example.com",
+        phoneNo: "6281247016022",
         password: "adminpassword",
-        role: "ADMIN",
       },
       {
         name: "Customer User",
         email: "customer@example.com",
+        phoneNo: "6281247016022",
         password: "customerpassword",
-        role: "CUSTOMER",
       },
       {
         name: "Staff User",
         email: "staff@example.com",
+        phoneNo: "6281247016022",
         password: "staffpassword",
-        role: "STAFF",
       },
     ],
   });
@@ -146,6 +146,7 @@ async function main() {
         bookingDate: new Date(),
         status: "CONFIRMED",
         seatNumber: "12A",
+        luggageWeight: 20,
       },
       {
         userId: 2, // Customer User
@@ -154,6 +155,7 @@ async function main() {
         bookingDate: new Date(),
         status: "CONFIRMED",
         seatNumber: "14B",
+        luggageWeight: 20,
       },
       {
         userId: 2, // Customer User
@@ -162,6 +164,7 @@ async function main() {
         bookingDate: new Date(),
         status: "CONFIRMED",
         seatNumber: "16C",
+        luggageWeight: 20,
       },
     ],
   });
@@ -170,68 +173,28 @@ async function main() {
   const payments = await prisma.payment.createMany({
     data: [
       {
-        bookingId: 1, // First Booking
+        paymentCode: 1, // First Booking
+        bookingId: 1,
         productName: "Flight Ticket",
         amount: 300,
         quantity: 1,
         paymentDate: new Date(),
-        paymentMethod: "CREDIT_CARD",
-        status: "COMPLETED",
       },
       {
-        bookingId: 2, // Second Booking
+        paymentCode: 2, // Second Booking
+        bookingId: 2,
         productName: "Flight Ticket",
         amount: 400,
         quantity: 1,
         paymentDate: new Date(),
-        paymentMethod: "DEBIT_CARD",
-        status: "COMPLETED",
       },
       {
-        bookingId: 3, // Third Booking
+        paymentCode: 3, // Third Booking
+        bookingId: 3,
         productName: "Flight Ticket",
         amount: 500,
         quantity: 1,
         paymentDate: new Date(),
-        paymentMethod: "CREDIT_CARD",
-        status: "PENDING",
-      },
-    ],
-  });
-
-  // Seed Staff
-  const staff = await prisma.staff.createMany({
-    data: [
-      {
-        userId: 3, // Staff User
-        position: "Captain",
-        department: "Flight Operations",
-      },
-      {
-        userId: 1, // Admin User
-        position: "Co-Pilot",
-        department: "Flight Operations",
-      },
-    ],
-  });
-
-  // Seed FlightCrew
-  const flightCrew = await prisma.flightCrew.createMany({
-    data: [
-      {
-        flightId: 1, // AA100
-        staffId: 1, // First Staff
-        role: "PILOT",
-      },
-      {
-        flightId: 2, // BA200
-        staffId: 2, // Second Staff
-        role: "CO_PILOT",
-      },
-      {
-        flightId: 3, // DL300
-        staffId: 1, // First Staff
-        role: "PILOT",
       },
     ],
   });
@@ -244,8 +207,6 @@ async function main() {
     flights,
     bookings,
     payments,
-    staff,
-    flightCrew,
   });
 }
 
