@@ -116,32 +116,6 @@ model Payment {
   updatedAt DateTime @updatedAt
 }
 
-// model Staff {
-//   id Int @id @default(autoincrement())
-//   userId Int @unique
-//   position String 
-//   department String
-//   flightCrew FlightCrew[]
-
-//   // user User @relation(fields: [userId], references: [id])
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
-
-// model FlightCrew {
-//   id Int @id @default(autoincrement())
-//   flightId Int
-//   staffId Int
-//   role CrewRole
-
-//   flight Flight @relation(fields: [flightId], references: [id])
-//   staff Staff @relation(fields: [staffId], references: [id])
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
-
 enum FlightStatus {
   SCHEDULED 
   ON_TIME
@@ -153,21 +127,4 @@ enum BookingStatus {
   CONFIRMED
   CANCELLED
   PENDING
-}
-
-// enum PaymentMethod {
-//   CREDIT_CARD
-//   DEBIT_CARD
-// }
-
-// enum PaymentStatus {
-//   COMPLETED
-//   FAILED
-//   PENDING
-// }
-
-enum CrewRole {
-  PILOT
-  CO_PILOT
-  ATTENDANT
 }
