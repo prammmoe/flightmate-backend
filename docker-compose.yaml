@@ -12,12 +12,8 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/flightmatedb
     depends_on:
       - db
-    command: >
-      sh -c "
-      npx prisma migrate deploy &&
-      npx prisma db seed &&
-      npm start"
-      
+    command: sh -c "npm install @prisma/client@latest npx prisma migrate deploy --preview-feature && npx prisma db seed && npm start"
+
   db:
     image: postgres:15
     environment:
