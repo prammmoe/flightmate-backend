@@ -74,15 +74,13 @@ model Flight {
   airlines String
   ticketPrice Int?
   bookings Booking[]
-  // flightCrew FlightCrew[]
-
   departureAirport Airport @relation("departures", fields: [departureAirportId], references: [id])
   arrivalAirport Airport @relation("arrivals", fields: [arrivalAirportId], references: [id])
   aircraft Aircraft @relation(fields: [aircraftId], references: [id])
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 
 model Booking {
   id Int @id @default(autoincrement())
